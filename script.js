@@ -1,48 +1,65 @@
-// class Calculator {
-//     constuctor () {
-
-//     }
-// }
-
 document.addEventListener("DOMContentLoaded", () => {
 
     const previousOperand = document.querySelector('.previous-operand');
     const currentOperand = document.querySelector('.current-operand');
     const numbers = document.querySelectorAll('.number');
     const operations = document.querySelectorAll('.operation, .operation-equally');
-    const currentOperandValue = currentOperand.innerText;
-    const previousOperandValue = previousOperand.innerText;
-    // mathCalculations ();
-
+    const clearAll = document.querySelector('.clear-all');
+    const deleteChar = document.querySelector('.delete-character');
 
     numbers.forEach((number) => number.addEventListener('click', (e) => {
-        currentOperand.innerText += e.target.innerText;
-        console.log(typeof currentOperand.innerText);
-
-    }))
-    operations.forEach((operation) => operation.addEventListener('click', (e) => {
-        if (currentOperand.innerText !== "") {
-            if(previousOperand.innerText == "") {
-        previousOperand.innerText += Number(currentOperand.innerText) + e.target.innerText;
-            } else {
-                // console.log(operation);
-                // console.log(typeof operation);
-                mathCalculations (operation, e);
-            }
-        } else return;
-        currentOperand.innerText = '';
-
-        
-        // console.log(typeof currentOperand.innerText);
-    }))
-
-    function mathCalculations (a, e) {
-        switch (a.innerText) {
-            case '+': previousOperand.innerText = parseInt(previousOperand.innerText) + Number(currentOperand.innerText) + e.target.innerText;
-            break;
+        if (currentOperand.innerText == '' && number.innerText == '.') return;
+        if (currentOperand.innerText.includes('.') && number.innerText == '.') return;
+        if (currentOperand.innerText[0] = ' ') {
+            currentOperand.innerText = e.target.innerText;
+            return;
         }
+        currentOperand.innerText += e.target.innerText;
+    }))
+    
+    operations.forEach((operation) => operation.addEventListener('click', (e) => {   
+        let mathSign = previousOperand.innerText[previousOperand.innerText.length - 1];  
+        if (currentOperand.innerText !== "") {
+            if (previousOperand.innerText == "") {
+                if (operation.innerText !== '=') {
+                     previousOperand.innerText = Number(currentOperand.innerText) + e.target.innerText;
+                     currentOperand.innerText = '';
+                } else return;
+            } else {                
+                mathCalculations (mathSign, e);
+            }              
+        } else return;
+    }))
+
+    function mathCalculations (a, event) {
+        let previousOperandValue = parseFloat(previousOperand.innerText)
+        switch (a) {
+            case '+':  previousOperand.innerText = previousOperandValue + Number(currentOperand.innerText);
+                break;
+            case '-': previousOperand.innerText = previousOperandValue - Number(currentOperand.innerText);
+                break;
+            case '/': previousOperand.innerText = previousOperandValue / Number(currentOperand.innerText)
+                break;
+            case '*': previousOperand.innerText = previousOperandValue * Number(currentOperand.innerText);
+                break;
+        }
+        if (event.target.innerText == '=') {
+                currentOperand.innerText = ' ' + previousOperand.innerText;
+                previousOperand.innerText = '';
+                return;                   
+            } else {
+                previousOperand.innerText += event.target.innerText;
+                currentOperand.innerText = '';
+            }
     }
+    // clear all digits using button AC
+    clearAll.addEventListener ('click', () => {
+        currentOperand.innerText = '';
+        previousOperand.innerText = '';
+    })
 
-
-
+    //delete one or some characters
+    deleteChar.addEventListener('click', () => {
+        currentOperand.innerText = currentOperand.innerText.substr(0, currentOperand.innerText.length - 1);       
+    })
 });
