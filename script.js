@@ -54,7 +54,11 @@ document.addEventListener("DOMContentLoaded", () => {
             currentOperand.innerText = +(Number(previousOperand.innerText)).toFixed(2);
             previousOperand.innerText = '';
             return;                   
-        } else {
+        } else if (event.target.innerText == '√'){
+            currentOperand.innerText = currentOperand.innerText + '√';
+        }
+        
+        else {
             previousOperand.innerText += event.target.innerText;
             currentOperand.innerText = '';
             }
